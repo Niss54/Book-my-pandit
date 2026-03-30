@@ -1,0 +1,76 @@
+﻿Analyzing book_my_pandit...
+
+  error - lib\data\repositories\auth_repository_impl.dart:38:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\data\repositories\auth_repository_impl.dart:38:3 - Expected to find ';'. - expected_token
+  error - lib\data\repositories\auth_repository_impl.dart:38:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\domain\repositories\auth_repository.dart:7:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\domain\repositories\auth_repository.dart:7:3 - Expected to find ';'. - expected_token
+  error - lib\domain\repositories\auth_repository.dart:7:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\main.dart:8:8 - Target of URI doesn't exist: 'presentation/providers/auth_provider.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\main.dart:9:8 - Target of URI doesn't exist: 'presentation/providers/booking_provider.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\main.dart:18:47 - The function 'AuthProvider' isn't defined. Try importing the library that defines 'AuthProvider', correcting the name to the name of an existing function, or defining a function named 'AuthProvider'. - undefined_function
+  error - lib\main.dart:19:47 - The function 'BookingProvider' isn't defined. Try importing the library that defines 'BookingProvider', correcting the name to the name of an existing function, or defining a function named 'BookingProvider'. - undefined_function
+  error - lib\models\booking_model.dart:12:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\models\booking_model.dart:12:3 - Expected to find ';'. - expected_token
+  error - lib\models\booking_model.dart:12:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\models\pandit_model.dart:12:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\models\pandit_model.dart:12:3 - Expected to find ';'. - expected_token
+  error - lib\models\pandit_model.dart:12:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\models\user_model.dart:10:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\models\user_model.dart:10:3 - Expected to find ';'. - expected_token
+  error - lib\models\user_model.dart:10:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\presentation\screens\checkout_screen.dart:3:8 - Target of URI doesn't exist: '../providers/booking_provider.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\presentation\screens\checkout_screen.dart:10:35 - The name 'BookingProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'BookingProvider'. - non_type_as_type_argument
+  error - lib\presentation\screens\checkout_screen.dart:74:33 - The name 'BookingProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'BookingProvider'. - non_type_as_type_argument
+  error - lib\presentation\screens\login_screen.dart:4:8 - Target of URI doesn't exist: '../providers/auth_provider.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\presentation\screens\login_screen.dart:11:32 - The name 'AuthProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'AuthProvider'. - non_type_as_type_argument
+  error - lib\presentation\screens\login_screen.dart:75:55 - The name 'AuthProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'AuthProvider'. - non_type_as_type_argument
+  error - lib\presentation\screens\pandit_listing_screen.dart:4:8 - Target of URI doesn't exist: '../providers/auth_provider.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\presentation\screens\pandit_listing_screen.dart:11:32 - The name 'AuthProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'AuthProvider'. - non_type_as_type_argument
+  error - lib\presentation\screens\pandit_listing_screen.dart:23:29 - The name 'AuthProvider' isn't a type, so it can't be used as a type argument. Try correcting the name to an existing type, or defining a type named 'AuthProvider'. - non_type_as_type_argument
+  error - lib\router.dart:2:8 - Target of URI doesn't exist: 'screens/home_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:3:8 - Target of URI doesn't exist: 'screens/login_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:4:8 - Target of URI doesn't exist: 'screens/pandit_listing_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:5:8 - Target of URI doesn't exist: 'screens/checkout_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:12:42 - The name 'HomeScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:16:42 - The name 'LoginScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:20:42 - The name 'PanditListingScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:24:42 - The name 'CheckoutScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\services\google_auth_service.dart:14:38 - The class 'GoogleSignIn' doesn't have an unnamed constructor. Try using one of the named constructors defined in 'GoogleSignIn'. - new_with_undefined_constructor_default
+  error - lib\services\google_auth_service.dart:20:64 - The method 'signIn' isn't defined for the type 'GoogleSignIn'. Try correcting the name to the name of an existing method, or defining a method named 'signIn'. - undefined_method
+  error - lib\services\google_auth_service.dart:27:27 - The getter 'accessToken' isn't defined for the type 'GoogleSignInAuthentication'. Try importing the library that defines 'accessToken', correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'. - undefined_getter
+  error - lib\services\google_auth_service.dart:48:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\services\google_auth_service.dart:48:3 - Expected to find ';'. - expected_token
+  error - lib\services\google_auth_service.dart:48:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\services\razorpay_service.dart:50:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\services\razorpay_service.dart:50:3 - Expected to find ';'. - expected_token
+  error - lib\services\razorpay_service.dart:50:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+  error - lib\services\supabase_service.dart:19:20 - Expected to find ','. - expected_token
+  error - lib\services\supabase_service.dart:19:20 - Too many positional arguments: 1 expected, but 2 found. Try removing the extra arguments. - extra_positional_arguments
+  error - lib\services\supabase_service.dart:19:20 - Undefined name 'fetching'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\services\supabase_service.dart:19:29 - Expected to find ','. - expected_token
+  error - lib\services\supabase_service.dart:19:29 - The named parameter 'pandits' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'pandits'. - undefined_named_parameter
+  error - lib\services\supabase_service.dart:19:38 - Expected an identifier. - missing_identifier
+  error - lib\services\supabase_service.dart:23:2 - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it. - expected_executable
+  error - lib\services\supabase_service.dart:23:3 - Expected to find ';'. - expected_token
+  error - lib\services\supabase_service.dart:23:3 - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var'. - missing_const_final_var_or_type
+warning - lib\presentation\screens\pandit_listing_screen.dart:11:11 - The value of the local variable 'user' isn't used. Try removing the variable or using it. - unused_local_variable
+   info - lib\data\repositories\auth_repository_impl.dart:38:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\domain\repositories\auth_repository.dart:7:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\models\booking_model.dart:12:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\models\pandit_model.dart:12:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\models\user_model.dart:10:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\presentation\screens\checkout_screen.dart:62:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\home_screen.dart:59:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\login_screen.dart:33:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\login_screen.dart:36:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\pandit_listing_screen.dart:39:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\services\google_auth_service.dart:23:47 - Uses 'await' on an instance of 'GoogleSignInAuthentication', which is not a subtype of 'Future'. Try removing the 'await' or changing the expression. - await_only_futures
+   info - lib\services\google_auth_service.dart:40:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\google_auth_service.dart:48:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\services\razorpay_service.dart:31:10 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\razorpay_service.dart:50:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+   info - lib\services\supabase_service.dart:19:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\supabase_service.dart:23:3 - An uninitialized variable should have an explicit type annotation. Try adding a type annotation. - prefer_typing_uninitialized_variables
+
+72 issues found.

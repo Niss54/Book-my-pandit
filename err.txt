@@ -1,0 +1,26 @@
+Analyzing book_my_pandit...
+
+  error - lib\router.dart:2:8 - Target of URI doesn't exist: 'screens/home_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:3:8 - Target of URI doesn't exist: 'screens/login_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:4:8 - Target of URI doesn't exist: 'screens/pandit_listing_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:5:8 - Target of URI doesn't exist: 'screens/checkout_screen.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\router.dart:12:42 - The name 'HomeScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:16:42 - The name 'LoginScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:20:42 - The name 'PanditListingScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\router.dart:24:42 - The name 'CheckoutScreen' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+  error - lib\services\google_auth_service.dart:14:38 - The class 'GoogleSignIn' doesn't have an unnamed constructor. Try using one of the named constructors defined in 'GoogleSignIn'. - new_with_undefined_constructor_default
+  error - lib\services\google_auth_service.dart:20:64 - The method 'signIn' isn't defined for the type 'GoogleSignIn'. Try correcting the name to the name of an existing method, or defining a method named 'signIn'. - undefined_method
+  error - lib\services\google_auth_service.dart:27:27 - The getter 'accessToken' isn't defined for the type 'GoogleSignInAuthentication'. Try importing the library that defines 'accessToken', correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'. - undefined_getter
+warning - lib\presentation\screens\pandit_listing_screen.dart:11:11 - The value of the local variable 'user' isn't used. Try removing the variable or using it. - unused_local_variable
+   info - lib\presentation\providers\auth_provider.dart:21:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\presentation\screens\checkout_screen.dart:62:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\home_screen.dart:59:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\login_screen.dart:33:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\login_screen.dart:36:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\presentation\screens\pandit_listing_screen.dart:39:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\services\google_auth_service.dart:23:47 - Uses 'await' on an instance of 'GoogleSignInAuthentication', which is not a subtype of 'Future'. Try removing the 'await' or changing the expression. - await_only_futures
+   info - lib\services\google_auth_service.dart:40:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\razorpay_service.dart:31:10 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\supabase_service.dart:19:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+
+22 issues found.

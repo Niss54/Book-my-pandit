@@ -1,0 +1,15 @@
+Analyzing book_my_pandit...                                     
+
+   info - Don't invoke 'print' in production code - lib\presentation\providers\auth_provider.dart:21:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\checkout_screen.dart:62:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\home_screen.dart:59:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\login_screen.dart:33:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\login_screen.dart:36:47 - deprecated_member_use
+warning - The value of the local variable 'user' isn't used - lib\presentation\screens\pandit_listing_screen.dart:11:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\pandit_listing_screen.dart:39:58 - deprecated_member_use
+  error - The class 'google_auth.GoogleSignIn' doesn't have an unnamed constructor - lib\services\google_auth_service.dart:10:50 - new_with_undefined_constructor_default
+  error - The method 'signIn' isn't defined for the type 'GoogleSignIn' - lib\services\google_auth_service.dart:16:43 - undefined_method
+   info - Don't invoke 'print' in production code - lib\services\google_auth_service.dart:36:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\razorpay_service.dart:31:10 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\supabase_service.dart:19:7 - avoid_print
+

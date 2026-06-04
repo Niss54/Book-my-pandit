@@ -59,6 +59,15 @@ Tables used by the app:
 - `pandits`
 - `bookings`
 
+## Environment Separation (Dev, Staging, Prod)
+
+It is highly recommended to maintain three separate Supabase projects to ensure data integrity and proper testing:
+1. **Development (`dev`)**: For local development and feature testing.
+2. **Staging (`staging`)**: Mirrors production schema for QA and pre-release testing.
+3. **Production (`prod`)**: Live user data.
+
+Ensure you maintain separate `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `RAZORPAY_KEY_ID` for each environment. You can manage these in Flutter by creating separate shell scripts or launch configurations (e.g. `.vscode/launch.json`) passing the correct `--dart-define` parameters for the target environment.
+
 ## Database Connection Pooling
 
 For backend APIs or Edge Functions connecting to the Supabase PostgreSQL database, always use the Supabase connection pooler (Supavisor).

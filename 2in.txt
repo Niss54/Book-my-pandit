@@ -58,8 +58,8 @@ After analyzing the `Book My Pandit` application, specifically its architecture,
 - [x] Add centralized exception handling for all backend endpoints with typed error codes.
 
 ### Phase 5: Deployment & Hardening (P4)
-- [ ] Separate `dev`, `staging`, and `prod` Supabase projects and environments.
-- [ ] Implement CI/CD pipelines with tests and gated deployments.
-- [ ] Setup Android App Bundle (AAB) hardening, release keystore handling, network security config, and obfuscation.
-- [ ] Finalize operator, API, database, and security documentation.
-- [ ] Update legacy package dependencies.
+- [x] Separate `dev`, `staging`, and `prod` Supabase projects and environments.
+- [x] Implement CI/CD pipelines with tests and gated deployments.
+- [x] Setup Android App Bundle (AAB) hardening, release keystore handling, network security config, and obfuscation.
+- [x] Finalize operator, API, database, and security documentation.
+- [x] Update legacy package dependencies.

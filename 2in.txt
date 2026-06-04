@@ -41,10 +41,10 @@ After analyzing the `Book My Pandit` application, specifically its architecture,
 - [x] Implement idempotency keys to prevent duplicate bookings.
 
 ### Phase 2: Database Optimization & Security (P1)
-- [ ] Implement robust Role-Based Access Control (RBAC) via normalized database tables (`user_roles`, `admin_permissions`).
-- [ ] Tighten Supabase RLS policies (e.g., customers can only read their own bookings; service-only write paths for confirmed bookings).
-- [ ] Add data validation rules (email, phone, dates, amount bounds) on the backend.
-- [ ] Securely manage secrets (move Supabase URL/key and Razorpay key to environment config).
+- [x] Implement robust Role-Based Access Control (RBAC) via normalized database tables (`user_roles`, `admin_permissions`).
+- [x] Tighten Supabase RLS policies (e.g., customers can only read their own bookings; service-only write paths for confirmed bookings).
+- [x] Add data validation rules (email, phone, dates, amount bounds) on the backend.
+- [x] Securely manage secrets (move Supabase URL/key and Razorpay key to environment config).
 
 ### Phase 3: Scalability & Async Processing (P2)
 - [ ] Introduce caching for static data (like Pandit lists and details) using Redis or similar.

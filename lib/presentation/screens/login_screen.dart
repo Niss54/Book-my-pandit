@@ -3,8 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String? _lastError;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +20,15 @@ class LoginScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (auth.currentUser != null) {
         context.go('/pandits');
+      }
+
+      if (auth.errorMessage != null && auth.errorMessage != _lastError) {
+        _lastError = auth.errorMessage;
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text(auth.errorMessage!)),
+          );
       }
     });
 
@@ -30,19 +46,23 @@ class LoginScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 24),
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))
+                BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))
               ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.network(
-                  'https://img.icons8.com/color/100/om.png', 
+                Image.asset(
+                  'assets/images/om_logo.png',
                   height: 60,
-                  color: const Color(0xFF8F4E00),
+                  errorBuilder: (context, _, __) => const Icon(
+                    Icons.temple_hindu,
+                    size: 60,
+                    color: Color(0xFF8F4E00),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -73,12 +93,21 @@ class LoginScreen extends StatelessWidget {
                           elevation: 0,
                         ),
                         onPressed: () => context.read<AuthProvider>().signInWithGoogle(),
-                        icon: Image.network(
-                          'https://img.icons8.com/color/48/google-logo.png',
+                        icon: Image.asset(
+                          'assets/images/google_logo.png',
                           height: 24,
+                          errorBuilder: (context, _, __) => const Icon(Icons.login),
                         ),
                         label: const Text('Continue with Google', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       ),
+                if (auth.errorMessage != null) ...[
+                  const SizedBox(height: 16),
+                  Text(
+                    auth.errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ],
             ),
           ),

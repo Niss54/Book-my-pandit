@@ -1,0 +1,65 @@
+# Book My Pandit - Application Analysis & Tasks
+
+After analyzing the `Book My Pandit` application, specifically its architecture, security setup, and production readiness based on the `PRODUCTION_ROADMAP.md` and codebase structure, here are the problems found and the tasks required to fix them.
+
+## 🔴 Major Problems Found in the Application:
+
+1. **Critical Security Vulnerability (Client-led Payments & Bookings):**
+   - The Flutter client app currently dictates the booking creation and payment success directly to the database.
+   - The app trusts the client with sensitive data (`amount`, `status`, `payment_reference`). This is extremely unsafe for real-money transactions because a malicious client can fake a payment and confirm a booking.
+
+2. **No Trusted Backend / Middle Layer:**
+   - The application lacks a backend server or Edge Functions. It connects directly to Supabase from the client.
+   - Operations like `create_booking_intent`, `create_payment_order`, and `verify_payment` are handled insecurely on the client-side.
+
+3. **Insufficient Database Security (RLS & RBAC):**
+   - No structured Role-Based Access Control (RBAC) to differentiate between `customer`, `pandit`, `admin`, and `support`.
+   - Supabase Row-Level Security (RLS) policies are not strict enough (missing deny-by-default and service-only write controls).
+
+4. **Missing Idempotency & Abuse Controls:**
+   - Duplicate requests or network retries can create duplicate bookings.
+   - No rate-limiting (per-IP, per-user, or sensitive action throttling) is implemented to prevent abuse or DDoS attacks.
+
+5. **Lack of Production Observability & Reliability:**
+   - No crash reporting, performance monitoring, or structured/audit logging.
+   - No background queueing system for retries, payment reconciliation, or async work.
+
+6. **Deployment & CI/CD Gaps:**
+   - Hardcoded secrets and credentials in the app rather than using environment config management.
+   - No CI/CD pipelines for automated tests, security checks, and proper staging/production environment separation.
+   - 29 dependencies have newer versions incompatible with current constraints (technical debt).
+
+---
+
+## ✅ All Tasks to Implement (Priority Order)
+
+### Phase 1: Trusted Backend Boundary & Payments (P0)
+- [x] Create a trusted backend API or Supabase Edge Functions.
+- [x] Move payment order creation (e.g., Razorpay) off the client to the server.
+- [x] Implement server-side Razorpay signature verification.
+- [x] Prevent the client from determining pricing; derive pricing on the server from authoritative catalog data.
+- [x] Implement idempotency keys to prevent duplicate bookings.
+
+### Phase 2: Database Optimization & Security (P1)
+- [ ] Implement robust Role-Based Access Control (RBAC) via normalized database tables (`user_roles`, `admin_permissions`).
+- [ ] Tighten Supabase RLS policies (e.g., customers can only read their own bookings; service-only write paths for confirmed bookings).
+- [ ] Add data validation rules (email, phone, dates, amount bounds) on the backend.
+- [ ] Securely manage secrets (move Supabase URL/key and Razorpay key to environment config).
+
+### Phase 3: Scalability & Async Processing (P2)
+- [ ] Introduce caching for static data (like Pandit lists and details) using Redis or similar.
+- [ ] Setup a queue/worker layer for async tasks (payment reconciliation, webhooks, notifications).
+- [ ] Implement connection pooling for database queries and add necessary database indexes (`user_id`, `pandit_id`, `date`).
+- [ ] Add rate limiting by IP, user, and token to prevent abuse.
+
+### Phase 4: Observability & Resilience (P3)
+- [ ] Integrate Sentry or Crashlytics for crash and performance monitoring.
+- [ ] Implement structured logging, audit logging, and suspicious-activity logging.
+- [ ] Add centralized exception handling for all backend endpoints with typed error codes.
+
+### Phase 5: Deployment & Hardening (P4)
+- [ ] Separate `dev`, `staging`, and `prod` Supabase projects and environments.
+- [ ] Implement CI/CD pipelines with tests and gated deployments.
+- [ ] Setup Android App Bundle (AAB) hardening, release keystore handling, network security config, and obfuscation.
+- [ ] Finalize operator, API, database, and security documentation.
+- [ ] Update legacy package dependencies.

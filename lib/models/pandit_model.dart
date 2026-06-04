@@ -8,5 +8,21 @@ class PanditModel {
 
   PanditModel({required this.id, required this.name, required this.expertise, required this.rating, required this.basePrice, required this.imageUrl});
   
-  factory PanditModel.fromJson(Map<String, dynamic> json) => PanditModel(id: json['id'], name: json['name'], expertise: json['expertise'], rating: (json['rating'] as num).toDouble(), basePrice: json['base_price'], imageUrl: json['image_url']);
+  factory PanditModel.fromJson(Map<String, dynamic> json) => PanditModel(
+        id: (json['id'] ?? '').toString(),
+        name: (json['name'] ?? '').toString(),
+        expertise: (json['expertise'] ?? '').toString(),
+        rating: ((json['rating'] ?? 0) as num).toDouble(),
+        basePrice: ((json['base_price'] ?? 0) as num).toInt(),
+        imageUrl: (json['image_url'] ?? '').toString(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'expertise': expertise,
+        'rating': rating,
+        'base_price': basePrice,
+        'image_url': imageUrl,
+      };
 }

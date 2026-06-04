@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             elevation: 8,
-                            shadowColor: const Color(0xFF8F4E00).withOpacity(0.5),
+                            shadowColor: const Color(0xFF8F4E00).withValues(alpha: 0.5),
                           ),
                           onPressed: () => context.push('/login'),
                           child: const Text('Get Started', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),

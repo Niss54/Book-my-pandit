@@ -5,6 +5,7 @@ import 'router.dart';
 import 'services/supabase_service.dart';
 import 'services/razorpay_service.dart';
 import 'data/repositories/auth_repository_impl.dart';
+import 'data/repositories/booking_repository_impl.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/booking_provider.dart';
 
@@ -16,7 +17,9 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider(AuthRepositoryImpl())),
-        ChangeNotifierProvider(create: (_) => BookingProvider(RazorpayService())),
+        ChangeNotifierProvider(
+          create: (_) => BookingProvider(RazorpayService(), BookingRepositoryImpl()),
+        ),
       ],
       child: const BookMyPanditApp(),
     ),

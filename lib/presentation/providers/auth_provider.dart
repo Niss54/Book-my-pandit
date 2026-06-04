@@ -5,6 +5,7 @@ class AuthProvider extends ChangeNotifier {
   final AuthRepository _authRepository;
   UserModel? _currentUser;
   bool _isLoading = false;
+  String? _errorMessage;
   AuthProvider(this._authRepository) {
     _authRepository.authStateChanges.listen((user) {
       _currentUser = user; notifyListeners();
@@ -12,13 +13,19 @@ class AuthProvider extends ChangeNotifier {
   }
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
   Future<void> signInWithGoogle() async {
     _isLoading = true; notifyListeners();
     try {
+      _errorMessage = null;
       final user = await _authRepository.signInWithGoogle();
-      _currentUser = user;
+      if (user != null) {
+        _currentUser = user;
+      } else {
+        _errorMessage = 'Google sign-in did not complete. Please try again.';
+      }
     } catch (e) {
-      print('Auth Error!');
+      _errorMessage = 'Unable to sign in right now. Please retry.';
     } finally {
       _isLoading = false; notifyListeners();
     }

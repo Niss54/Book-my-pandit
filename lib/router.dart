@@ -1,11 +1,46 @@
+import 'dart:async';
+
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/pandit_listing_screen.dart';
 import 'presentation/screens/checkout_screen.dart';
+import 'models/pandit_model.dart';
+
+class AuthStateRefreshNotifier extends ChangeNotifier {
+  late final StreamSubscription<AuthState> _subscription;
+
+  AuthStateRefreshNotifier() {
+    _subscription = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+
+final AuthStateRefreshNotifier _authRefreshNotifier = AuthStateRefreshNotifier();
+
+bool _isAuthenticated() => Supabase.instance.client.auth.currentUser != null;
 
 final goRouter = GoRouter(
   initialLocation: '/',
+  refreshListenable: _authRefreshNotifier,
+  redirect: (context, state) {
+    final bool loggedIn = _isAuthenticated();
+    final String path = state.uri.path;
+    final bool needsAuth = path == '/pandits' || path == '/checkout';
+
+    if (!loggedIn && needsAuth) return '/login';
+    if (loggedIn && path == '/login') return '/pandits';
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -21,7 +56,13 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/checkout',
-      builder: (context, state) => const CheckoutScreen(),
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is! PanditModel) {
+          return const HomeScreen();
+        }
+        return CheckoutScreen(pandit: extra);
+      },
     ),
   ],
 );

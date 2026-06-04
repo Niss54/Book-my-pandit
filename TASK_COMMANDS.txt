@@ -1,0 +1,198 @@
+BOOK MY PANDIT TASK COMMANDS
+
+Use this file to give structured tasks to Codex quickly.
+Copy any template below, fill it, and send it as your message.
+
+--------------------------------------------------
+1. QUICK TASK TEMPLATE
+--------------------------------------------------
+
+Do this now:
+Task:
+Priority: P0 / P1 / P2
+Goal:
+Files to focus:
+Do not change:
+Done when:
+
+Example:
+Do this now:
+Task: Secure payment verification flow
+Priority: P0
+Goal: Move booking confirmation to trusted backend flow
+Files to focus: lib/, supabase/, docs/
+Do not change: Existing UI styling unless required
+Done when: Payment cannot confirm booking directly from client
+
+--------------------------------------------------
+2. BUG FIX TEMPLATE
+--------------------------------------------------
+
+Fix this bug:
+Issue:
+Where it happens:
+Expected behavior:
+Actual behavior:
+Relevant files:
+Priority:
+
+--------------------------------------------------
+3. SECURITY TASK TEMPLATE
+--------------------------------------------------
+
+Security task:
+Risk:
+What to secure:
+Files/modules involved:
+Rules:
+Done when:
+
+Example:
+Security task:
+Risk: Client can directly confirm bookings after payment success
+What to secure: Payment verification and booking confirmation
+Files/modules involved: lib/presentation/providers/booking_provider.dart, lib/services/supabase_service.dart, supabase/
+Rules: Do not trust client-submitted amount or payment reference
+Done when: Booking is confirmed only after server-side verification
+
+--------------------------------------------------
+4. BACKEND TASK TEMPLATE
+--------------------------------------------------
+
+Backend task:
+Feature:
+Why:
+Files/modules involved:
+Constraints:
+Done when:
+
+--------------------------------------------------
+5. DATABASE TASK TEMPLATE
+--------------------------------------------------
+
+Database task:
+Change needed:
+Tables involved:
+Security concern:
+Migration needed: Yes / No
+Done when:
+
+--------------------------------------------------
+6. DOCUMENTATION TASK TEMPLATE
+--------------------------------------------------
+
+Documentation task:
+Topic:
+Audience: Developer / Admin / Ops / Play Store
+Include:
+File to create or update:
+Done when:
+
+--------------------------------------------------
+7. REVIEW TASK TEMPLATE
+--------------------------------------------------
+
+Review this:
+Scope:
+Focus on:
+Ignore:
+Output needed:
+
+Example:
+Review this:
+Scope: auth and booking flow
+Focus on: security gaps, production risks, missing validation
+Ignore: UI styling
+Output needed: findings first with file references
+
+--------------------------------------------------
+8. IMPLEMENTATION MODE TEMPLATE
+--------------------------------------------------
+
+Implement this phase:
+Phase name:
+Objective:
+In scope:
+Out of scope:
+Constraints:
+Done when:
+
+--------------------------------------------------
+9. SAFE SMALL CHANGES TEMPLATE
+--------------------------------------------------
+
+Small change:
+What to change:
+File:
+Do not affect:
+Done when:
+
+--------------------------------------------------
+10. HIGH-PRIORITY ESCALATION TEMPLATE
+--------------------------------------------------
+
+P0 task:
+Problem:
+Risk if not fixed:
+Act now on:
+Do not wait for:
+Done when:
+
+--------------------------------------------------
+11. CURRENT MASTER ROADMAP
+--------------------------------------------------
+
+Use the roadmap in:
+docs/PRODUCTION_ROADMAP.md
+
+Current priority order:
+1. Trusted backend and payment verification
+2. Server-authoritative booking flow with idempotency
+3. RBAC and stricter RLS
+4. Rate limiting, caching, queueing, observability
+5. Deployment hardening and backups
+6. Full documentation
+
+--------------------------------------------------
+12. SIMPLE ONE-LINE FORMAT
+--------------------------------------------------
+
+You can also send tasks in this short format:
+
+Abhi ye karo: [task name]
+Scope: [files or module]
+Important: [constraint]
+Done when: [success condition]
+
+Example:
+Abhi ye karo: booking flow ko secure backend pattern me shift karo
+Scope: lib/, supabase/, docs/
+Important: existing screens break nahi hone chahiye
+Done when: client direct booking confirmation na kar sake
+
+--------------------------------------------------
+13. HOW TO WORK WITH ME
+--------------------------------------------------
+
+Best way to assign work:
+
+- Ek message me ek clear task do
+- Priority likho
+- Agar kuch touch nahi karna hai to woh bhi likho
+- "Done when" zaroor likho
+- Agar review chahiye ho to explicitly "Review this" likho
+- Agar implementation chahiye ho to "Implement this phase" likho
+
+--------------------------------------------------
+14. RECOMMENDED NEXT COMMAND
+--------------------------------------------------
+
+Copy-paste this to start the next major phase:
+
+Implement this phase:
+Phase name: Phase 1 - Trusted Backend Boundary
+Objective: Secure booking and payment flow for production
+In scope: payment verification design, booking intent flow, server-authoritative confirmation, idempotency, documentation
+Out of scope: UI redesign
+Constraints: Existing Flutter app should keep working as much as possible
+Done when: client can no longer be treated as the source of truth for payment-confirmed bookings

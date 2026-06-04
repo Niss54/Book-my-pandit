@@ -1,65 +1,49 @@
-# Book My Pandit - Application Analysis & Tasks
+# Book My Pandit - V2 Application Analysis & Next Steps
 
-After analyzing the `Book My Pandit` application, specifically its architecture, security setup, and production readiness based on the `PRODUCTION_ROADMAP.md` and codebase structure, here are the problems found and the tasks required to fix them.
+After successfully completing the initial Production Roadmap (Phases 1-5), the core app is secure, hardened, and observable. However, a deep analysis of the current state reveals several architectural, UX, and feature gaps that prevent the application from being a fully mature, scalable product.
 
-## 🔴 Major Problems Found in the Application:
+## 🔴 Problems Found in the Current Application (V2 Gaps):
 
-1. **Critical Security Vulnerability (Client-led Payments & Bookings):**
-   - The Flutter client app currently dictates the booking creation and payment success directly to the database.
-   - The app trusts the client with sensitive data (`amount`, `status`, `payment_reference`). This is extremely unsafe for real-money transactions because a malicious client can fake a payment and confirm a booking.
+1. **Missing Core User Features (UX/UI):**
+   - **No Booking History:** Users cannot view their past or upcoming bookings. There is no `BookingsListScreen` or profile management.
+   - **Basic Pandit Discovery:** The `PanditListingScreen` lacks search functionality, category filters (e.g., Marriage, Griha Pravesh, Vastu), and pagination.
+   - **No Pandit Details:** Clicking a Pandit goes straight to checkout. Users cannot view detailed profiles, reviews, or available time slots.
+   - **Clunky Scheduling:** The `CheckoutScreen` uses basic Material date/time pickers instead of a curated "Available Slots" UI.
 
-2. **No Trusted Backend / Middle Layer:**
-   - The application lacks a backend server or Edge Functions. It connects directly to Supabase from the client.
-   - Operations like `create_booking_intent`, `create_payment_order`, and `verify_payment` are handled insecurely on the client-side.
+2. **Architecture & State Management Debt:**
+   - **No Dependency Injection:** Repositories and Services are tightly coupled and instantiated directly (e.g., `AuthRepositoryImpl()`). This makes unit testing UI/Providers extremely difficult.
+   - **Static Service Singletons:** `SupabaseService` relies heavily on static methods and hardcoded `Supabase.instance.client`, which is an anti-pattern for testability and scaling.
 
-3. **Insufficient Database Security (RLS & RBAC):**
-   - No structured Role-Based Access Control (RBAC) to differentiate between `customer`, `pandit`, `admin`, and `support`.
-   - Supabase Row-Level Security (RLS) policies are not strict enough (missing deny-by-default and service-only write controls).
+3. **Missing Backend Capabilities (Admin & Ops):**
+   - **No Admin Dashboard:** There is no web or admin interface for the platform operators to manage Pandits, view analytics, or resolve disputes.
+   - **Incomplete Payment Lifecycle:** While we capture payments, there is no automated *Refunds* flow via Razorpay API if a booking is cancelled.
+   - **No Push Notifications:** Users do not receive realtime alerts (e.g., Firebase Cloud Messaging) when their booking is confirmed or if the Pandit is arriving.
 
-4. **Missing Idempotency & Abuse Controls:**
-   - Duplicate requests or network retries can create duplicate bookings.
-   - No rate-limiting (per-IP, per-user, or sensitive action throttling) is implemented to prevent abuse or DDoS attacks.
-
-5. **Lack of Production Observability & Reliability:**
-   - No crash reporting, performance monitoring, or structured/audit logging.
-   - No background queueing system for retries, payment reconciliation, or async work.
-
-6. **Deployment & CI/CD Gaps:**
-   - Hardcoded secrets and credentials in the app rather than using environment config management.
-   - No CI/CD pipelines for automated tests, security checks, and proper staging/production environment separation.
-   - 29 dependencies have newer versions incompatible with current constraints (technical debt).
+4. **Testing Deficiencies:**
+   - While some provider tests exist, there is a lack of comprehensive UI widget tests, mocked repository tests (due to missing DI), and end-to-end (E2E) integration tests for the checkout flow.
 
 ---
 
-## ✅ All Tasks to Implement (Priority Order)
+## ✅ V2 Tasks to Implement (Priority Order)
 
-### Phase 1: Trusted Backend Boundary & Payments (P0)
-- [x] Create a trusted backend API or Supabase Edge Functions.
-- [x] Move payment order creation (e.g., Razorpay) off the client to the server.
-- [x] Implement server-side Razorpay signature verification.
-- [x] Prevent the client from determining pricing; derive pricing on the server from authoritative catalog data.
-- [x] Implement idempotency keys to prevent duplicate bookings.
+### Phase 1: User Experience & Core Features (P0)
+- [x] Implement `BookingsListScreen` so users can view their upcoming and past bookings.
+- [x] Add Search and Category Filtering (e.g., Puja type) to the `PanditListingScreen`.
+- [x] Create a `PanditDetailsScreen` showing reviews, detailed expertise, and an "Available Time Slots" UI.
+- [x] Add a User Profile screen for managing personal details and logging out.
 
-### Phase 2: Database Optimization & Security (P1)
-- [x] Implement robust Role-Based Access Control (RBAC) via normalized database tables (`user_roles`, `admin_permissions`).
-- [x] Tighten Supabase RLS policies (e.g., customers can only read their own bookings; service-only write paths for confirmed bookings).
-- [x] Add data validation rules (email, phone, dates, amount bounds) on the backend.
-- [x] Securely manage secrets (move Supabase URL/key and Razorpay key to environment config).
+### Phase 2: Architectural Refactoring (P1)
+- [ ] Introduce Dependency Injection (e.g., using `get_it` or `riverpod`).
+- [ ] Refactor `SupabaseService` from static methods to an injectable interface (`ISupabaseService`) to enable mocking.
+- [ ] Refactor Providers to ensure business logic is fully decoupled from the UI and easily testable.
 
-### Phase 3: Scalability & Async Processing (P2)
-- [x] Introduce caching for static data (like Pandit lists and details) using Redis or similar.
-- [x] Setup a queue/worker layer for async tasks (payment reconciliation, webhooks, notifications).
-- [x] Implement connection pooling for database queries and add necessary database indexes (`user_id`, `pandit_id`, `date`).
-- [x] Add rate limiting by IP, user, and token to prevent abuse.
+### Phase 3: Advanced Backend & Ops (P2)
+- [ ] Implement an Admin Dashboard (Flutter Web) for operators to manage platform data.
+- [ ] Integrate Razorpay Refunds API in a new Supabase Edge Function to handle booking cancellations automatically.
+- [ ] Integrate Firebase Cloud Messaging (FCM) for push notifications on booking status changes.
+- [ ] Add real-time Supabase subscriptions to the app so bookings update instantly on the screen without pulling.
 
-### Phase 4: Observability & Resilience (P3)
-- [x] Integrate Sentry or Crashlytics for crash and performance monitoring.
-- [x] Implement structured logging, audit logging, and suspicious-activity logging.
-- [x] Add centralized exception handling for all backend endpoints with typed error codes.
-
-### Phase 5: Deployment & Hardening (P4)
-- [x] Separate `dev`, `staging`, and `prod` Supabase projects and environments.
-- [x] Implement CI/CD pipelines with tests and gated deployments.
-- [x] Setup Android App Bundle (AAB) hardening, release keystore handling, network security config, and obfuscation.
-- [x] Finalize operator, API, database, and security documentation.
-- [x] Update legacy package dependencies.
+### Phase 4: Comprehensive Testing (P3)
+- [ ] Write robust unit tests for all UI providers using mocked dependencies.
+- [ ] Add Widget tests for `CheckoutScreen` and `PanditListingScreen`.
+- [ ] Implement full End-to-End (E2E) integration tests for the end-user booking flow using `integration_test`.

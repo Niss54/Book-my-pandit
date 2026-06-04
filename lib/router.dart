@@ -6,7 +6,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/pandit_listing_screen.dart';
+import 'presentation/screens/pandit_details_screen.dart';
 import 'presentation/screens/checkout_screen.dart';
+import 'presentation/screens/bookings_list_screen.dart';
+import 'presentation/screens/profile_screen.dart';
 import 'models/pandit_model.dart';
 
 class AuthStateRefreshNotifier extends ChangeNotifier {
@@ -35,7 +38,7 @@ final goRouter = GoRouter(
   redirect: (context, state) {
     final bool loggedIn = _isAuthenticated();
     final String path = state.uri.path;
-    final bool needsAuth = path == '/pandits' || path == '/checkout';
+    final bool needsAuth = path == '/pandits' || path == '/checkout' || path == '/bookings' || path == '/profile' || path == '/pandit_details';
 
     if (!loggedIn && needsAuth) return '/login';
     if (loggedIn && path == '/login') return '/pandits';
@@ -55,6 +58,16 @@ final goRouter = GoRouter(
       builder: (context, state) => const PanditListingScreen(),
     ),
     GoRoute(
+      path: '/pandit_details',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is! PanditModel) {
+          return const PanditListingScreen();
+        }
+        return PanditDetailsScreen(pandit: extra);
+      },
+    ),
+    GoRoute(
       path: '/checkout',
       builder: (context, state) {
         final extra = state.extra;
@@ -63,6 +76,14 @@ final goRouter = GoRouter(
         }
         return CheckoutScreen(pandit: extra);
       },
+    ),
+    GoRoute(
+      path: '/bookings',
+      builder: (context, state) => const BookingsListScreen(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
     ),
   ],
 );

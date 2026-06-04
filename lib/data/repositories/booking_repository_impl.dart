@@ -66,4 +66,9 @@ class BookingRepositoryImpl implements BookingRepository {
       status: status,
     );
   }
+
+  @override
+  Future<List<BookingModel>> getUserBookings(String userId) {
+    return SupabaseService.getUserBookings(userId);
+  }
 }

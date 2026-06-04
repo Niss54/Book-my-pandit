@@ -130,4 +130,15 @@ class SupabaseService {
 
     return BookingModel.fromJson(response);
   }
+
+  static Future<List<BookingModel>> getUserBookings(String userId) async {
+    final response = await client
+        .from('bookings')
+        .select()
+        .eq('user_id', userId)
+        .order('date', ascending: false);
+
+    final rows = List<Map<String, dynamic>>.from(response as List);
+    return rows.map(BookingModel.fromJson).toList();
+  }
 }

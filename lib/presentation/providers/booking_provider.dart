@@ -28,10 +28,12 @@ class BookingProvider extends ChangeNotifier {
   final PaymentGateway _paymentGateway;
   final BookingRepository _bookingRepository;
   bool _isProcessing = false;
+  bool _isLoadingBookings = false;
   String? _lastPaymentId;
   String? _lastBookingId;
   String? _errorMessage;
   BookingModel? _lastBooking;
+  List<BookingModel>? _userBookings;
   CheckoutRequest? _pendingRequest;
   String? _pendingIdempotencyKey;
 
@@ -43,10 +45,25 @@ class BookingProvider extends ChangeNotifier {
   }
 
   bool get isProcessing => _isProcessing;
+  bool get isLoadingBookings => _isLoadingBookings;
   String? get lastPaymentId => _lastPaymentId;
   String? get lastBookingId => _lastBookingId;
   String? get errorMessage => _errorMessage;
   BookingModel? get lastBooking => _lastBooking;
+  List<BookingModel>? get userBookings => _userBookings;
+
+  Future<void> fetchUserBookings(String userId) async {
+    _isLoadingBookings = true;
+    notifyListeners();
+    try {
+      _userBookings = await _bookingRepository.getUserBookings(userId);
+    } catch (e) {
+      _errorMessage = 'Failed to load bookings.';
+    } finally {
+      _isLoadingBookings = false;
+      notifyListeners();
+    }
+  }
 
   void clearTransientMessages() {
     _errorMessage = null;

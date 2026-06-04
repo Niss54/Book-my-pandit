@@ -44,4 +44,6 @@ abstract class BookingRepository {
     required String userId,
     required String status,
   });
+
+  Future<List<BookingModel>> getUserBookings(String userId);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'router.dart';
@@ -12,16 +13,24 @@ import 'presentation/providers/booking_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SupabaseService.initialize();
-  
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider(AuthRepositoryImpl())),
-        ChangeNotifierProvider(
-          create: (_) => BookingProvider(RazorpayService(), BookingRepositoryImpl()),
-        ),
-      ],
-      child: const BookMyPanditApp(),
+
+  const sentryDsn = String.fromEnvironment('SENTRY_DSN');
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = sentryDsn;
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider(AuthRepositoryImpl())),
+          ChangeNotifierProvider(
+            create: (_) => BookingProvider(RazorpayService(), BookingRepositoryImpl()),
+          ),
+        ],
+        child: const BookMyPanditApp(),
+      ),
     ),
   );
 }

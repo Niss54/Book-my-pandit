@@ -53,9 +53,9 @@ After analyzing the `Book My Pandit` application, specifically its architecture,
 - [x] Add rate limiting by IP, user, and token to prevent abuse.
 
 ### Phase 4: Observability & Resilience (P3)
-- [ ] Integrate Sentry or Crashlytics for crash and performance monitoring.
-- [ ] Implement structured logging, audit logging, and suspicious-activity logging.
-- [ ] Add centralized exception handling for all backend endpoints with typed error codes.
+- [x] Integrate Sentry or Crashlytics for crash and performance monitoring.
+- [x] Implement structured logging, audit logging, and suspicious-activity logging.
+- [x] Add centralized exception handling for all backend endpoints with typed error codes.
 
 ### Phase 5: Deployment & Hardening (P4)
 - [ ] Separate `dev`, `staging`, and `prod` Supabase projects and environments.

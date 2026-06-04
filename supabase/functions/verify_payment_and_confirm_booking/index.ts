@@ -38,165 +38,187 @@ Deno.serve(async (req: Request) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  try {
+    if (req.method !== 'POST') {
+      return new Response(JSON.stringify({ code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' }), {
+        status: 405,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') ?? '';
+    const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') ?? '';
+
+    if (supabaseUrl.isEmpty || serviceRoleKey.isEmpty || razorpayKeySecret.isEmpty || razorpayKeyId.isEmpty) {
+      console.error('Function secrets are not configured');
+      return new Response(JSON.stringify({ code: 'CONFIG_ERROR', message: 'Function secrets are not configured' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const jwt = authHeader.replace('Bearer ', '').trim();
+    if (jwt.isEmpty) {
+      return new Response(JSON.stringify({ code: 'UNAUTHORIZED', message: 'Missing bearer token' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const body = (await req.json()) as VerifyRequest;
+    const userId = body.user_id?.trim();
+    const panditId = body.pandit_id?.trim();
+    const scheduledAt = body.scheduled_at?.trim();
+    const paymentId = body.payment_id?.trim();
+    const orderId = body.order_id?.trim();
+    const signature = body.signature?.trim();
+    const idempotencyKey = body.idempotency_key?.trim();
+
+    if (
+      userId == null || userId.isEmpty ||
+      panditId == null || panditId.isEmpty ||
+      scheduledAt == null || scheduledAt.isEmpty ||
+      paymentId == null || paymentId.isEmpty ||
+      orderId == null || orderId.isEmpty ||
+      signature == null || signature.isEmpty ||
+      idempotencyKey == null || idempotencyKey.isEmpty
+    ) {
+      return new Response(JSON.stringify({ code: 'BAD_REQUEST', message: 'Missing required fields' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const userResult = await supabase.auth.getUser(jwt);
+    if (userResult.error != null || userResult.data.user == null || userResult.data.user.id !== userId) {
+      console.error('Unauthorized attempt', userResult.error);
+      return new Response(JSON.stringify({ code: 'UNAUTHORIZED', message: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const expectedSignature = await hmacSha256Hex(razorpayKeySecret, `${orderId}|${paymentId}`);
+    if (expectedSignature.toLowerCase() !== signature.toLowerCase()) {
+      console.error('Invalid signature for order', orderId);
+      return new Response(JSON.stringify({ code: 'UNAUTHORIZED', message: 'Invalid signature' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const existing = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('idempotency_key', idempotencyKey)
+      .maybeSingle();
+
+    if (existing.error == null && existing.data != null) {
+      return new Response(JSON.stringify(existing.data), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const panditResult = await supabase
+      .from('pandits')
+      .select('id, base_price, is_active')
+      .eq('id', panditId)
+      .single();
+
+    if (panditResult.error != null || panditResult.data == null || panditResult.data.is_active !== true) {
+      return new Response(JSON.stringify({ code: 'BAD_REQUEST', message: 'Invalid pandit' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const paymentAuthToken = btoa(`${razorpayKeyId}:${razorpayKeySecret}`);
+    const paymentResponse = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Basic ${paymentAuthToken}`,
+        'Content-Type': 'application/json',
+      },
     });
-  }
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET') ?? '';
-  const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID') ?? '';
+    const paymentPayload = await paymentResponse.json();
+    if (!paymentResponse.ok) {
+      console.error('Unable to validate payment with Razorpay', paymentPayload);
+      return new Response(JSON.stringify({ code: 'PAYMENT_GATEWAY_ERROR', message: 'Unable to validate payment' }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-  if (supabaseUrl.isEmpty || serviceRoleKey.isEmpty || razorpayKeySecret.isEmpty || razorpayKeyId.isEmpty) {
-    return new Response(JSON.stringify({ error: 'Function secrets are not configured' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+    if (paymentPayload?.order_id !== orderId) {
+      return new Response(JSON.stringify({ code: 'CONFLICT', message: 'Payment order mismatch' }), {
+        status: 409,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-  const authHeader = req.headers.get('Authorization') ?? '';
-  const jwt = authHeader.replace('Bearer ', '').trim();
-  if (jwt.isEmpty) {
-    return new Response(JSON.stringify({ error: 'Missing bearer token' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+    if (paymentPayload?.status !== 'captured' && paymentPayload?.status !== 'authorized') {
+      return new Response(JSON.stringify({ code: 'CONFLICT', message: 'Payment not captured' }), {
+        status: 409,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-  const body = (await req.json()) as VerifyRequest;
-  const userId = body.user_id?.trim();
-  const panditId = body.pandit_id?.trim();
-  const scheduledAt = body.scheduled_at?.trim();
-  const paymentId = body.payment_id?.trim();
-  const orderId = body.order_id?.trim();
-  const signature = body.signature?.trim();
-  const idempotencyKey = body.idempotency_key?.trim();
+    const expectedAmountInPaise = Number(panditResult.data.base_price) * 100;
+    if (Number(paymentPayload?.amount) !== expectedAmountInPaise) {
+      console.error('Amount mismatch', paymentPayload?.amount, expectedAmountInPaise);
+      return new Response(JSON.stringify({ code: 'CONFLICT', message: 'Amount mismatch' }), {
+        status: 409,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-  if (
-    userId == null || userId.isEmpty ||
-    panditId == null || panditId.isEmpty ||
-    scheduledAt == null || scheduledAt.isEmpty ||
-    paymentId == null || paymentId.isEmpty ||
-    orderId == null || orderId.isEmpty ||
-    signature == null || signature.isEmpty ||
-    idempotencyKey == null || idempotencyKey.isEmpty
-  ) {
-    return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+    const insertResult = await supabase
+      .from('bookings')
+      .insert({
+        user_id: userId,
+        pandit_id: panditId,
+        date: scheduledAt,
+        amount: Number(panditResult.data.base_price),
+        status: 'confirmed',
+        payment_reference: paymentId,
+        payment_verified_at: new Date().toISOString(),
+        idempotency_key: idempotencyKey,
+      })
+      .select('*')
+      .single();
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey);
-  const userResult = await supabase.auth.getUser(jwt);
-  if (userResult.error != null || userResult.data.user == null || userResult.data.user.id !== userId) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+    if (insertResult.error != null || insertResult.data == null) {
+      console.error('Failed to create booking', insertResult.error);
+      return new Response(JSON.stringify({ code: 'INTERNAL_ERROR', message: 'Unable to create booking' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-  const expectedSignature = await hmacSha256Hex(razorpayKeySecret, `${orderId}|${paymentId}`);
-  if (expectedSignature.toLowerCase() !== signature.toLowerCase()) {
-    return new Response(JSON.stringify({ error: 'Invalid signature' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const existing = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('idempotency_key', idempotencyKey)
-    .maybeSingle();
-
-  if (existing.error == null && existing.data != null) {
-    return new Response(JSON.stringify(existing.data), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const panditResult = await supabase
-    .from('pandits')
-    .select('id, base_price, is_active')
-    .eq('id', panditId)
-    .single();
-
-  if (panditResult.error != null || panditResult.data == null || panditResult.data.is_active !== true) {
-    return new Response(JSON.stringify({ error: 'Invalid pandit' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const paymentAuthToken = btoa(`${razorpayKeyId}:${razorpayKeySecret}`);
-  const paymentResponse = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Basic ${paymentAuthToken}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const paymentPayload = await paymentResponse.json();
-  if (!paymentResponse.ok) {
-    return new Response(JSON.stringify({ error: 'Unable to validate payment' }), {
-      status: 502,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  if (paymentPayload?.order_id !== orderId) {
-    return new Response(JSON.stringify({ error: 'Payment order mismatch' }), {
-      status: 409,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  if (paymentPayload?.status !== 'captured' && paymentPayload?.status !== 'authorized') {
-    return new Response(JSON.stringify({ error: 'Payment not captured' }), {
-      status: 409,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const expectedAmountInPaise = Number(panditResult.data.base_price) * 100;
-  if (Number(paymentPayload?.amount) !== expectedAmountInPaise) {
-    return new Response(JSON.stringify({ error: 'Amount mismatch' }), {
-      status: 409,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const insertResult = await supabase
-    .from('bookings')
-    .insert({
+    // Log the verification securely
+    await supabase.from('audit_logs').insert({
       user_id: userId,
-      pandit_id: panditId,
-      date: scheduledAt,
-      amount: Number(panditResult.data.base_price),
-      status: 'confirmed',
-      payment_reference: paymentId,
-      payment_verified_at: new Date().toISOString(),
-      idempotency_key: idempotencyKey,
-    })
-    .select('*')
-    .single();
+      action: 'verify_payment_and_confirm_booking',
+      target_id: insertResult.data.id,
+      payload: { payment_id: paymentId, order_id: orderId }
+    });
 
-  if (insertResult.error != null || insertResult.data == null) {
-    return new Response(JSON.stringify({ error: 'Unable to create booking' }), {
+    return new Response(JSON.stringify(insertResult.data), {
+      status: 201,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Unhandled Exception in verify_payment_and_confirm_booking', error);
+    return new Response(JSON.stringify({ code: 'INTERNAL_ERROR', message: 'An unexpected error occurred.' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-
-  return new Response(JSON.stringify(insertResult.data), {
-    status: 201,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
 });

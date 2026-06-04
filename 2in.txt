@@ -47,10 +47,10 @@ After analyzing the `Book My Pandit` application, specifically its architecture,
 - [x] Securely manage secrets (move Supabase URL/key and Razorpay key to environment config).
 
 ### Phase 3: Scalability & Async Processing (P2)
-- [ ] Introduce caching for static data (like Pandit lists and details) using Redis or similar.
-- [ ] Setup a queue/worker layer for async tasks (payment reconciliation, webhooks, notifications).
-- [ ] Implement connection pooling for database queries and add necessary database indexes (`user_id`, `pandit_id`, `date`).
-- [ ] Add rate limiting by IP, user, and token to prevent abuse.
+- [x] Introduce caching for static data (like Pandit lists and details) using Redis or similar.
+- [x] Setup a queue/worker layer for async tasks (payment reconciliation, webhooks, notifications).
+- [x] Implement connection pooling for database queries and add necessary database indexes (`user_id`, `pandit_id`, `date`).
+- [x] Add rate limiting by IP, user, and token to prevent abuse.
 
 ### Phase 4: Observability & Resilience (P3)
 - [ ] Integrate Sentry or Crashlytics for crash and performance monitoring.

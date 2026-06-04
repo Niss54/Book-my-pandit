@@ -59,6 +59,11 @@ Tables used by the app:
 - `pandits`
 - `bookings`
 
+## Database Connection Pooling
+
+For backend APIs or Edge Functions connecting to the Supabase PostgreSQL database, always use the Supabase connection pooler (Supavisor).
+Update your `SUPABASE_DB_URL` (if connecting directly to DB from backend) to use port `6543` instead of the default `5432` to avoid connection exhaustion under heavy load.
+
 ## Payment Setup
 
 1. Create a Razorpay account.

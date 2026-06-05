@@ -56,8 +56,8 @@ void main() {
 
   testWidgets('renders pandit list', (WidgetTester tester) async {
     final mockPandits = [
-      PanditModel(id: '1', name: 'Pandit A', experienceYears: 10, rating: 5.0, bio: 'Bio A', expertise: 'Marriage', basePrice: 1000, profilePictureUrl: null, isActive: true),
-      PanditModel(id: '2', name: 'Pandit B', experienceYears: 5, rating: 4.0, bio: 'Bio B', expertise: 'Puja', basePrice: 500, profilePictureUrl: null, isActive: true),
+      PanditModel(id: '1', name: 'Pandit A', experienceYears: 10, rating: 5.0, bio: 'Bio A', expertise: 'Marriage', basePrice: 1000, imageUrl: '', isActive: true),
+      PanditModel(id: '2', name: 'Pandit B', experienceYears: 5, rating: 4.0, bio: 'Bio B', expertise: 'Puja', basePrice: 500, imageUrl: '', isActive: true),
     ];
 
     when(() => mockPanditRepository.getActivePandits())

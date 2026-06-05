@@ -13,10 +13,13 @@ import 'presentation/providers/booking_provider.dart';
 
 import 'services/push_notification_service.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  setupLocator();
+  final prefs = await SharedPreferences.getInstance();
+  setupLocator(prefs);
   await getIt<ISupabaseService>().initialize();
   
   // Initialize Push Notifications (will safely fail if Firebase is not configured)

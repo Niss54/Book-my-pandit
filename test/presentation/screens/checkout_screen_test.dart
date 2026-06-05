@@ -39,7 +39,7 @@ void main() {
   }
 
   testWidgets('renders pandit details correctly', (WidgetTester tester) async {
-    final pandit = PanditModel(id: '1', name: 'Test Pandit', experienceYears: 10, rating: 5.0, bio: 'Bio', expertise: 'Marriage', basePrice: 1500, profilePictureUrl: null, isActive: true);
+    final pandit = PanditModel(id: '1', name: 'Test Pandit', experienceYears: 10, rating: 5.0, bio: 'Bio', expertise: 'Marriage', basePrice: 1500, imageUrl: '', isActive: true);
 
     await tester.pumpWidget(createWidgetUnderTest(pandit));
 

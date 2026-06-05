@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/pandit_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PanditDetailsScreen extends StatelessWidget {
   final PanditModel pandit;
@@ -49,16 +50,16 @@ class PanditDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   Center(
-                    child: pandit.imageUrl.isEmpty
+                    child: (pandit.imageUrl.isEmpty)
                         ? const Icon(Icons.person, size: 100, color: Colors.white54)
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              pandit.imageUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: pandit.imageUrl,
                               width: 160,
                               height: 160,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, _, __) =>
+                              errorWidget: (context, url, error) =>
                                   const Icon(Icons.person, size: 100, color: Colors.white54),
                             ),
                           ),

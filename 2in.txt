@@ -47,3 +47,9 @@ After successfully completing the initial Production Roadmap (Phases 1-5), the c
 - [x] Write robust unit tests for all UI providers using mocked dependencies.
 - [x] Add Widget tests for `CheckoutScreen` and `PanditListingScreen`.
 - [x] Implement full End-to-End (E2E) integration tests for the end-user booking flow using `integration_test`.
+
+### Phase 5: App Store Readiness & Performance (P4)
+- [x] Add `cached_network_image` for optimized loading and caching of Pandit profile images.
+- [x] Generate native App Icons using `flutter_launcher_icons`.
+- [x] Implement a native Splash Screen using `flutter_native_splash`.
+- [x] Implement basic offline caching for the Pandits list using `shared_preferences`.

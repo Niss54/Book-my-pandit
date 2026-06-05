@@ -7,6 +7,7 @@ import '../../domain/repositories/pandit_repository.dart';
 import '../providers/auth_provider.dart';
 import '../../models/pandit_model.dart';
 import '../widgets/main_scaffold.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PanditListingScreen extends StatefulWidget {
   final PanditRepository? panditRepository;
@@ -243,12 +244,12 @@ class _PanditListingScreenState extends State<PanditListingScreen> {
                                       ),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(16),
-                                        child: pandit.imageUrl.isEmpty
+                                        child: (pandit.imageUrl.isEmpty)
                                             ? const Icon(Icons.person, color: Color(0xFF8F4E00))
-                                            : Image.network(
-                                                pandit.imageUrl,
+                                            : CachedNetworkImage(
+                                                imageUrl: pandit.imageUrl,
                                                 fit: BoxFit.cover,
-                                                errorBuilder: (context, _, __) => const Icon(
+                                                errorWidget: (context, url, error) => const Icon(
                                                   Icons.person,
                                                   color: Color(0xFF8F4E00),
                                                 ),

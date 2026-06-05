@@ -12,10 +12,13 @@ import '../data/repositories/pandit_repository_impl.dart';
 import '../services/payment_gateway.dart';
 import '../services/razorpay_service.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 final getIt = GetIt.instance;
 
-void setupLocator() {
+void setupLocator(SharedPreferences prefs) {
   // Services
+  getIt.registerSingleton<SharedPreferences>(prefs);
   getIt.registerLazySingleton<ISupabaseService>(() => SupabaseServiceImpl());
   getIt.registerLazySingleton<IAuthService>(() => GoogleAuthServiceImpl());
   getIt.registerLazySingleton<PaymentGateway>(() => RazorpayService());
@@ -28,6 +31,6 @@ void setupLocator() {
     () => BookingRepositoryImpl(getIt<ISupabaseService>()),
   );
   getIt.registerLazySingleton<PanditRepository>(
-    () => PanditRepositoryImpl(getIt<ISupabaseService>()),
+    () => PanditRepositoryImpl(getIt<ISupabaseService>(), getIt<SharedPreferences>()),
   );
 }

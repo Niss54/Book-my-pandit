@@ -44,6 +44,6 @@ After successfully completing the initial Production Roadmap (Phases 1-5), the c
 - [x] Add real-time Supabase subscriptions to the app so bookings update instantly on the screen without pulling.
 
 ### Phase 4: Comprehensive Testing (P3)
-- [ ] Write robust unit tests for all UI providers using mocked dependencies.
-- [ ] Add Widget tests for `CheckoutScreen` and `PanditListingScreen`.
-- [ ] Implement full End-to-End (E2E) integration tests for the end-user booking flow using `integration_test`.
+- [x] Write robust unit tests for all UI providers using mocked dependencies.
+- [x] Add Widget tests for `CheckoutScreen` and `PanditListingScreen`.
+- [x] Implement full End-to-End (E2E) integration tests for the end-user booking flow using `integration_test`.

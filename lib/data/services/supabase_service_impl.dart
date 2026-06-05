@@ -1,14 +1,16 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../domain/repositories/booking_repository.dart';
-import '../config/app_config.dart';
-import '../models/booking_model.dart';
-import '../models/pandit_model.dart';
-import '../models/user_model.dart';
+import '../../domain/services/i_supabase_service.dart';
+import '../../domain/repositories/booking_repository.dart';
+import '../../config/app_config.dart';
+import '../../models/booking_model.dart';
+import '../../models/pandit_model.dart';
+import '../../models/user_model.dart';
 
-class SupabaseService {
-  static final SupabaseClient client = Supabase.instance.client;
+class SupabaseServiceImpl implements ISupabaseService {
+  final SupabaseClient client = Supabase.instance.client;
 
-  static Future<void> initialize() async {
+  @override
+  Future<void> initialize() async {
      if (!AppConfig.hasSupabaseConfig) {
        throw StateError(
          'Missing SUPABASE_URL or SUPABASE_ANON_KEY. Pass them via --dart-define.',
@@ -21,11 +23,13 @@ class SupabaseService {
      );
   }
 
-  static Future<void> upsertUserProfile(UserModel user) async {
+  @override
+  Future<void> upsertUserProfile(UserModel user) async {
     await client.from('users').upsert(user.toJson(), onConflict: 'id');
   }
 
-  static Future<List<PanditModel>> getPandits() async {
+  @override
+  Future<List<PanditModel>> getPandits() async {
     final response = await client
         .from('pandits')
         .select()
@@ -36,7 +40,8 @@ class SupabaseService {
     return rows.map(PanditModel.fromJson).toList();
   }
 
-  static Future<PaymentOrder> createPaymentOrder({
+  @override
+  Future<PaymentOrder> createPaymentOrder({
     required String panditId,
     required String idempotencyKey,
   }) async {
@@ -61,7 +66,8 @@ class SupabaseService {
     );
   }
 
-  static Future<BookingModel> verifyPaymentAndConfirmBooking({
+  @override
+  Future<BookingModel> verifyPaymentAndConfirmBooking({
     required String userId,
     required String panditId,
     required DateTime date,
@@ -91,7 +97,8 @@ class SupabaseService {
     return BookingModel.fromJson(data);
   }
 
-  static Future<BookingModel> createBooking({
+  @override
+  Future<BookingModel> createBooking({
     required String userId,
     required String panditId,
     required DateTime date,
@@ -115,7 +122,8 @@ class SupabaseService {
     return BookingModel.fromJson(response);
   }
 
-  static Future<BookingModel> updateBookingStatus({
+  @override
+  Future<BookingModel> updateBookingStatus({
     required String bookingId,
     required String userId,
     required String status,
@@ -131,7 +139,8 @@ class SupabaseService {
     return BookingModel.fromJson(response);
   }
 
-  static Future<List<BookingModel>> getUserBookings(String userId) async {
+  @override
+  Future<List<BookingModel>> getUserBookings(String userId) async {
     final response = await client
         .from('bookings')
         .select()
@@ -141,4 +150,10 @@ class SupabaseService {
     final rows = List<Map<String, dynamic>>.from(response as List);
     return rows.map(BookingModel.fromJson).toList();
   }
+
+  @override
+  Stream<AuthState> get authStateChanges => client.auth.onAuthStateChange;
+
+  @override
+  User? get currentUser => client.auth.currentUser;
 }

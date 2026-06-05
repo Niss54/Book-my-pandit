@@ -1,16 +1,17 @@
 import '../../domain/repositories/auth_repository.dart';
 import '../../models/user_model.dart';
-import '../../services/google_auth_service.dart';
-import '../../services/supabase_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../domain/services/i_auth_service.dart';
+import '../../domain/services/i_supabase_service.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final SupabaseClient _supabaseClient = Supabase.instance.client;
-  final GoogleAuthService _googleAuthService = GoogleAuthService();
+  final ISupabaseService _supabaseService;
+  final IAuthService _authService;
+
+  AuthRepositoryImpl(this._supabaseService, this._authService);
 
   @override
   Future<UserModel?> signInWithGoogle() async {
-    final user = await _googleAuthService.signIn();
+    final user = await _authService.signIn();
     if (user != null) {
       final appUser = UserModel(
         id: user.uid,
@@ -19,7 +20,7 @@ class AuthRepositoryImpl implements AuthRepository {
         profilePictureUrl: user.photoUrl,
       );
 
-      await SupabaseService.upsertUserProfile(appUser);
+      await _supabaseService.upsertUserProfile(appUser);
       return appUser;
     }
     return null;
@@ -27,12 +28,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> signOut() async {
-    await _googleAuthService.signOut();
+    await _authService.signOut();
   }
 
   @override
   Stream<UserModel?> get authStateChanges {
-     return _supabaseClient.auth.onAuthStateChange.asyncMap((event) async {
+     return _supabaseService.authStateChanges.asyncMap((event) async {
         final user = event.session?.user;
         if (user == null) return null;
 
@@ -43,7 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
           profilePictureUrl: user.userMetadata?['avatar_url']?.toString(),
         );
 
-        await SupabaseService.upsertUserProfile(appUser);
+        await _supabaseService.upsertUserProfile(appUser);
         return appUser;
      });
   }

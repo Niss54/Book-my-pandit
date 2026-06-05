@@ -1,13 +1,9 @@
 import 'dart:async';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../domain/services/i_auth_service.dart';
 
-class GoogleAuthUser {
-   final String uid; final String email; final String name; final String? photoUrl;
-   GoogleAuthUser({required this.uid, required this.email, required this.name, this.photoUrl});
-}
-
-class GoogleAuthService {
+class GoogleAuthServiceImpl implements IAuthService {
+  @override
   Future<GoogleAuthUser?> signIn() async {
     try {
       final success = await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.google);
@@ -41,6 +37,7 @@ class GoogleAuthService {
     }
   }
 
+  @override
   Future<void> signOut() async {
     await Supabase.instance.client.auth.signOut();
   }

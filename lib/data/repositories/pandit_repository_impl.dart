@@ -1,11 +1,15 @@
 import '../../domain/repositories/pandit_repository.dart';
 import '../../models/pandit_model.dart';
-import '../../services/supabase_service.dart';
+import '../../domain/services/i_supabase_service.dart';
 
 class PanditRepositoryImpl implements PanditRepository {
+  final ISupabaseService _supabaseService;
+  
   List<PanditModel>? _cachedPandits;
   DateTime? _lastFetchTime;
   static const Duration _cacheDuration = Duration(minutes: 5);
+
+  PanditRepositoryImpl(this._supabaseService);
 
   @override
   Future<List<PanditModel>> getActivePandits() async {
@@ -16,7 +20,7 @@ class PanditRepositoryImpl implements PanditRepository {
       }
     }
 
-    final pandits = await SupabaseService.getPandits();
+    final pandits = await _supabaseService.getPandits();
     _cachedPandits = pandits;
     _lastFetchTime = now;
     return pandits;

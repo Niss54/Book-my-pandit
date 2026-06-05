@@ -3,16 +3,19 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'router.dart';
-import 'services/supabase_service.dart';
-import 'services/razorpay_service.dart';
-import 'data/repositories/auth_repository_impl.dart';
-import 'data/repositories/booking_repository_impl.dart';
+import 'di/service_locator.dart';
+import 'domain/services/i_supabase_service.dart';
+import 'services/payment_gateway.dart';
+import 'domain/repositories/auth_repository.dart';
+import 'domain/repositories/booking_repository.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/booking_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SupabaseService.initialize();
+  
+  setupLocator();
+  await getIt<ISupabaseService>().initialize();
 
   const sentryDsn = String.fromEnvironment('SENTRY_DSN');
 
@@ -24,9 +27,9 @@ void main() async {
     appRunner: () => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => AuthProvider(AuthRepositoryImpl())),
+          ChangeNotifierProvider(create: (_) => AuthProvider(getIt<AuthRepository>())),
           ChangeNotifierProvider(
-            create: (_) => BookingProvider(RazorpayService(), BookingRepositoryImpl()),
+            create: (_) => BookingProvider(getIt<PaymentGateway>(), getIt<BookingRepository>()),
           ),
         ],
         child: const BookMyPanditApp(),

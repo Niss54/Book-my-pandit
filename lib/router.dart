@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'di/service_locator.dart';
+import 'domain/services/i_supabase_service.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/pandit_listing_screen.dart';
@@ -16,7 +18,7 @@ class AuthStateRefreshNotifier extends ChangeNotifier {
   late final StreamSubscription<AuthState> _subscription;
 
   AuthStateRefreshNotifier() {
-    _subscription = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+    _subscription = getIt<ISupabaseService>().authStateChanges.listen((_) {
       notifyListeners();
     });
   }
@@ -30,7 +32,7 @@ class AuthStateRefreshNotifier extends ChangeNotifier {
 
 final AuthStateRefreshNotifier _authRefreshNotifier = AuthStateRefreshNotifier();
 
-bool _isAuthenticated() => Supabase.instance.client.auth.currentUser != null;
+bool _isAuthenticated() => getIt<ISupabaseService>().currentUser != null;
 
 final goRouter = GoRouter(
   initialLocation: '/',

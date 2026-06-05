@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/pandit_repository_impl.dart';
+import '../../di/service_locator.dart';
 import '../../domain/repositories/pandit_repository.dart';
 import '../providers/auth_provider.dart';
 import '../../models/pandit_model.dart';
@@ -34,7 +35,7 @@ class _PanditListingScreenState extends State<PanditListingScreen> {
   @override
   void initState() {
     super.initState();
-    final repository = widget.panditRepository ?? PanditRepositoryImpl();
+    final repository = widget.panditRepository ?? getIt<PanditRepository>();
     _panditsFuture = repository.getActivePandits();
   }
 
@@ -45,7 +46,7 @@ class _PanditListingScreenState extends State<PanditListingScreen> {
   }
 
   Future<void> _reloadPandits() async {
-    final repository = widget.panditRepository ?? PanditRepositoryImpl();
+    final repository = widget.panditRepository ?? getIt<PanditRepository>();
     setState(() {
       _panditsFuture = repository.getActivePandits();
     });

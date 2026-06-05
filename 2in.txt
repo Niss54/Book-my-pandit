@@ -33,9 +33,9 @@ After successfully completing the initial Production Roadmap (Phases 1-5), the c
 - [x] Add a User Profile screen for managing personal details and logging out.
 
 ### Phase 2: Architectural Refactoring (P1)
-- [ ] Introduce Dependency Injection (e.g., using `get_it` or `riverpod`).
-- [ ] Refactor `SupabaseService` from static methods to an injectable interface (`ISupabaseService`) to enable mocking.
-- [ ] Refactor Providers to ensure business logic is fully decoupled from the UI and easily testable.
+- [x] Introduce Dependency Injection (e.g., using `get_it` or `riverpod`).
+- [x] Refactor `SupabaseService` from static methods to an injectable interface (`ISupabaseService`) to enable mocking.
+- [x] Refactor Providers to ensure business logic is fully decoupled from the UI and easily testable.
 
 ### Phase 3: Advanced Backend & Ops (P2)
 - [ ] Implement an Admin Dashboard (Flutter Web) for operators to manage platform data.

@@ -1,14 +1,18 @@
 import '../../domain/repositories/booking_repository.dart';
 import '../../models/booking_model.dart';
-import '../../services/supabase_service.dart';
+import '../../domain/services/i_supabase_service.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
+  final ISupabaseService _supabaseService;
+
+  BookingRepositoryImpl(this._supabaseService);
+
   @override
   Future<PaymentOrder> createPaymentOrder({
     required String panditId,
     required String idempotencyKey,
   }) {
-    return SupabaseService.createPaymentOrder(
+    return _supabaseService.createPaymentOrder(
       panditId: panditId,
       idempotencyKey: idempotencyKey,
     );
@@ -24,7 +28,7 @@ class BookingRepositoryImpl implements BookingRepository {
     required String signature,
     required String idempotencyKey,
   }) {
-    return SupabaseService.verifyPaymentAndConfirmBooking(
+    return _supabaseService.verifyPaymentAndConfirmBooking(
       userId: userId,
       panditId: panditId,
       date: date,
@@ -44,7 +48,7 @@ class BookingRepositoryImpl implements BookingRepository {
     required String status,
     String? paymentReference,
   }) {
-    return SupabaseService.createBooking(
+    return _supabaseService.createBooking(
       userId: userId,
       panditId: panditId,
       date: date,
@@ -60,7 +64,7 @@ class BookingRepositoryImpl implements BookingRepository {
     required String userId,
     required String status,
   }) {
-    return SupabaseService.updateBookingStatus(
+    return _supabaseService.updateBookingStatus(
       bookingId: bookingId,
       userId: userId,
       status: status,
@@ -69,6 +73,6 @@ class BookingRepositoryImpl implements BookingRepository {
 
   @override
   Future<List<BookingModel>> getUserBookings(String userId) {
-    return SupabaseService.getUserBookings(userId);
+    return _supabaseService.getUserBookings(userId);
   }
 }

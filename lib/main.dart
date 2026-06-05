@@ -11,11 +11,16 @@ import 'domain/repositories/booking_repository.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/booking_provider.dart';
 
+import 'services/push_notification_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   setupLocator();
   await getIt<ISupabaseService>().initialize();
+  
+  // Initialize Push Notifications (will safely fail if Firebase is not configured)
+  await PushNotificationService.initialize();
 
   const sentryDsn = String.fromEnvironment('SENTRY_DSN');
 

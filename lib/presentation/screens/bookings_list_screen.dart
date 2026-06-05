@@ -22,7 +22,7 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
       _hasFetched = true;
       final user = context.read<AuthProvider>().currentUser;
       if (user != null) {
-        context.read<BookingProvider>().fetchUserBookings(user.id);
+        context.read<BookingProvider>().subscribeToUserBookings(user.id);
       }
     }
   }

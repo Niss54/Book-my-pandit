@@ -46,4 +46,8 @@ abstract class BookingRepository {
   });
 
   Future<List<BookingModel>> getUserBookings(String userId);
+
+  Future<List<BookingModel>> getAllBookings();
+
+  Stream<List<BookingModel>> subscribeToUserBookings(String userId);
 }

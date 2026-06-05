@@ -41,6 +41,12 @@ abstract class ISupabaseService {
 
   Future<List<BookingModel>> getUserBookings(String userId);
 
+  Future<List<BookingModel>> getAllBookings();
+
+  Stream<List<BookingModel>> subscribeToUserBookings(String userId);
+
+  Future<String> getUserRole(String userId);
+
   Stream<AuthState> get authStateChanges;
   User? get currentUser;
 }

@@ -38,10 +38,10 @@ After successfully completing the initial Production Roadmap (Phases 1-5), the c
 - [x] Refactor Providers to ensure business logic is fully decoupled from the UI and easily testable.
 
 ### Phase 3: Advanced Backend & Ops (P2)
-- [ ] Implement an Admin Dashboard (Flutter Web) for operators to manage platform data.
-- [ ] Integrate Razorpay Refunds API in a new Supabase Edge Function to handle booking cancellations automatically.
-- [ ] Integrate Firebase Cloud Messaging (FCM) for push notifications on booking status changes.
-- [ ] Add real-time Supabase subscriptions to the app so bookings update instantly on the screen without pulling.
+- [x] Implement an Admin Dashboard (Flutter Web) for operators to manage platform data.
+- [x] Integrate Razorpay Refunds API in a new Supabase Edge Function to handle booking cancellations automatically.
+- [x] Integrate Firebase Cloud Messaging (FCM) for push notifications on booking status changes.
+- [x] Add real-time Supabase subscriptions to the app so bookings update instantly on the screen without pulling.
 
 ### Phase 4: Comprehensive Testing (P3)
 - [ ] Write robust unit tests for all UI providers using mocked dependencies.

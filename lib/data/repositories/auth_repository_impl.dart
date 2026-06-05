@@ -13,11 +13,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<UserModel?> signInWithGoogle() async {
     final user = await _authService.signIn();
     if (user != null) {
+      final role = await _supabaseService.getUserRole(user.uid);
       final appUser = UserModel(
         id: user.uid,
         email: user.email,
         name: user.name,
         profilePictureUrl: user.photoUrl,
+        role: role,
       );
 
       await _supabaseService.upsertUserProfile(appUser);
@@ -37,11 +39,13 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = event.session?.user;
         if (user == null) return null;
 
+        final role = await _supabaseService.getUserRole(user.id);
         final appUser = UserModel(
           id: user.id,
           email: user.email ?? '',
           name: (user.userMetadata?['full_name'] ?? 'User').toString(),
           profilePictureUrl: user.userMetadata?['avatar_url']?.toString(),
+          role: role,
         );
 
         await _supabaseService.upsertUserProfile(appUser);

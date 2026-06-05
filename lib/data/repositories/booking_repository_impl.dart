@@ -75,4 +75,14 @@ class BookingRepositoryImpl implements BookingRepository {
   Future<List<BookingModel>> getUserBookings(String userId) {
     return _supabaseService.getUserBookings(userId);
   }
+
+  @override
+  Future<List<BookingModel>> getAllBookings() {
+    return _supabaseService.getAllBookings();
+  }
+
+  @override
+  Stream<List<BookingModel>> subscribeToUserBookings(String userId) {
+    return _supabaseService.subscribeToUserBookings(userId);
+  }
 }

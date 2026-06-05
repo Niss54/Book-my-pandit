@@ -37,11 +37,20 @@ class BookingProvider extends ChangeNotifier {
   CheckoutRequest? _pendingRequest;
   String? _pendingIdempotencyKey;
 
+  StreamSubscription<List<BookingModel>>? _bookingsSubscription;
+
   BookingProvider(this._paymentGateway, this._bookingRepository) {
     _paymentGateway.onSuccess = _handlePaymentSuccess;
     _paymentGateway.onFailure = _handlePaymentError;
     _paymentGateway.onExternalWallet = _handleExternalWallet;
     _paymentGateway.onCheckoutError = _handleCheckoutError;
+  }
+
+  @override
+  void dispose() {
+    _bookingsSubscription?.cancel();
+    _paymentGateway.dispose();
+    super.dispose();
   }
 
   bool get isProcessing => _isProcessing;
@@ -52,17 +61,23 @@ class BookingProvider extends ChangeNotifier {
   BookingModel? get lastBooking => _lastBooking;
   List<BookingModel>? get userBookings => _userBookings;
 
-  Future<void> fetchUserBookings(String userId) async {
+  void subscribeToUserBookings(String userId) {
     _isLoadingBookings = true;
     notifyListeners();
-    try {
-      _userBookings = await _bookingRepository.getUserBookings(userId);
-    } catch (e) {
-      _errorMessage = 'Failed to load bookings.';
-    } finally {
-      _isLoadingBookings = false;
-      notifyListeners();
-    }
+    
+    _bookingsSubscription?.cancel();
+    _bookingsSubscription = _bookingRepository.subscribeToUserBookings(userId).listen(
+      (bookings) {
+        _userBookings = bookings;
+        _isLoadingBookings = false;
+        notifyListeners();
+      },
+      onError: (e) {
+        _errorMessage = e.toString();
+        _isLoadingBookings = false;
+        notifyListeners();
+      },
+    );
   }
 
   void clearTransientMessages() {

@@ -98,6 +98,16 @@ class ProfileScreen extends StatelessWidget {
                             title: 'About',
                             onTap: () {},
                           ),
+                          if (user.role == 'admin') ...[
+                            const Divider(height: 1, indent: 56),
+                            _buildSettingsItem(
+                              icon: Icons.admin_panel_settings,
+                              title: 'Admin Dashboard',
+                              onTap: () {
+                                context.go('/admin');
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     ),

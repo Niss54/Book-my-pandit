@@ -12,6 +12,7 @@ import 'presentation/screens/pandit_details_screen.dart';
 import 'presentation/screens/checkout_screen.dart';
 import 'presentation/screens/bookings_list_screen.dart';
 import 'presentation/screens/profile_screen.dart';
+import 'presentation/screens/admin_dashboard_screen.dart';
 import 'models/pandit_model.dart';
 
 class AuthStateRefreshNotifier extends ChangeNotifier {
@@ -86,6 +87,10 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/admin',
+      builder: (context, state) => const AdminDashboardScreen(),
     ),
   ],
 );

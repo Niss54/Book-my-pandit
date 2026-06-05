@@ -152,6 +152,42 @@ class SupabaseServiceImpl implements ISupabaseService {
   }
 
   @override
+  Future<List<BookingModel>> getAllBookings() async {
+    final response = await client
+        .from('bookings')
+        .select()
+        .order('date', ascending: false);
+
+    final rows = List<Map<String, dynamic>>.from(response as List);
+    return rows.map(BookingModel.fromJson).toList();
+  }
+
+  @override
+  Stream<List<BookingModel>> subscribeToUserBookings(String userId) {
+    return client
+        .from('bookings')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .order('date', ascending: false)
+        .map((event) => event.map(BookingModel.fromJson).toList());
+  }
+
+  @override
+  Future<String> getUserRole(String userId) async {
+    try {
+      final response = await client
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .maybeSingle();
+      
+      return response?['role'] as String? ?? 'customer';
+    } catch (_) {
+      return 'customer';
+    }
+  }
+
+  @override
   Stream<AuthState> get authStateChanges => client.auth.onAuthStateChange;
 
   @override

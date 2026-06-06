@@ -72,6 +72,23 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
+  Future<void> submitReview({
+    required String bookingId,
+    required String userId,
+    required String panditId,
+    required int rating,
+    String? comment,
+  }) {
+    return _supabaseService.submitReview(
+      bookingId: bookingId,
+      userId: userId,
+      panditId: panditId,
+      rating: rating,
+      comment: comment,
+    );
+  }
+
+  @override
   Future<List<BookingModel>> getUserBookings(String userId) {
     return _supabaseService.getUserBookings(userId);
   }

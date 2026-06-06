@@ -11,6 +11,7 @@ class BookingModel {
   final String status;
   final int amount;
   final String? paymentReference;
+  final bool hasReview;
 
   BookingModel({
     required this.id,
@@ -20,6 +21,7 @@ class BookingModel {
     required this.status,
     required this.amount,
     this.paymentReference,
+    this.hasReview = false,
   });
 
   bool canTransitionTo(String nextStatus) {
@@ -41,6 +43,7 @@ class BookingModel {
         status: (json['status'] ?? '').toString(),
         amount: ((json['amount'] ?? 0) as num).toInt(),
         paymentReference: json['payment_reference']?.toString(),
+        hasReview: json['has_review'] == true,
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,5 +54,6 @@ class BookingModel {
         'status': status,
         'amount': amount,
         'payment_reference': paymentReference,
+        'has_review': hasReview,
       };
 }

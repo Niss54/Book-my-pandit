@@ -214,6 +214,51 @@ class BookingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> submitReview({
+    required String bookingId,
+    required String userId,
+    required String panditId,
+    required int rating,
+    String? comment,
+  }) async {
+    _isProcessing = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _bookingRepository.submitReview(
+        bookingId: bookingId,
+        userId: userId,
+        panditId: panditId,
+        rating: rating,
+        comment: comment,
+      );
+      
+      // Update local state if the reviewed booking is in the list
+      if (_userBookings != null) {
+        final index = _userBookings!.indexWhere((b) => b.id == bookingId);
+        if (index != -1) {
+          final oldBooking = _userBookings![index];
+          _userBookings![index] = BookingModel(
+            id: oldBooking.id,
+            userId: oldBooking.userId,
+            panditId: oldBooking.panditId,
+            date: oldBooking.date,
+            status: oldBooking.status,
+            amount: oldBooking.amount,
+            paymentReference: oldBooking.paymentReference,
+            hasReview: true,
+          );
+        }
+      }
+    } catch (e) {
+      _errorMessage = 'Failed to submit review. Please try again.';
+    } finally {
+      _isProcessing = false;
+      notifyListeners();
+    }
+  }
+
   @override
   void dispose() {
     _paymentGateway.dispose();

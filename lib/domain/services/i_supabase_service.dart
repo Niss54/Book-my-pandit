@@ -45,6 +45,14 @@ abstract class ISupabaseService {
     required String status,
   });
 
+  Future<void> submitReview({
+    required String bookingId,
+    required String userId,
+    required String panditId,
+    required int rating,
+    String? comment,
+  });
+
   Future<List<BookingModel>> getUserBookings(String userId);
 
   Future<List<BookingModel>> getAllBookings();

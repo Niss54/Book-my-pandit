@@ -152,6 +152,31 @@ class SupabaseServiceImpl implements ISupabaseService {
   }
 
   @override
+  Future<void> submitReview({
+    required String bookingId,
+    required String userId,
+    required String panditId,
+    required int rating,
+    String? comment,
+  }) async {
+    // 1. Insert review
+    await client.from('reviews').insert({
+      'booking_id': bookingId,
+      'user_id': userId,
+      'pandit_id': panditId,
+      'rating': rating,
+      'comment': comment,
+    });
+
+    // 2. Update booking to mark as reviewed
+    await client
+        .from('bookings')
+        .update({'has_review': true})
+        .eq('id', bookingId)
+        .eq('user_id', userId);
+  }
+
+  @override
   Future<List<BookingModel>> getUserBookings(String userId) async {
     final response = await client
         .from('bookings')

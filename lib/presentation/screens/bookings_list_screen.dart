@@ -4,6 +4,7 @@ import '../providers/auth_provider.dart';
 import '../providers/booking_provider.dart';
 import '../../models/booking_model.dart';
 import '../widgets/main_scaffold.dart';
+import '../widgets/leave_review_dialog.dart';
 
 class BookingsListScreen extends StatefulWidget {
   const BookingsListScreen({super.key});
@@ -138,6 +139,30 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
                     ),
                   ),
                 ),
+                if (booking.status == BookingModel.statusCompleted && !booking.hasReview) ...[
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (context) => LeaveReviewDialog(booking: booking),
+                      );
+                    },
+                    child: const Text(
+                      'Leave Review',
+                      style: TextStyle(
+                        color: Color(0xFF8F4E00),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ],

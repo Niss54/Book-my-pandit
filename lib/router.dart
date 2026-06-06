@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:go_router/go_router.dart';
+import 'presentation/screens/edit_profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'di/service_locator.dart';
@@ -87,6 +88,10 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/edit-profile',
+      builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
       path: '/admin',

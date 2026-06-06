@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -35,10 +36,10 @@ class ProfileScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: const Color(0xFFFFF6ED),
-                      backgroundImage: user.profilePictureUrl != null
-                          ? NetworkImage(user.profilePictureUrl!)
+                      backgroundImage: (user.profilePictureUrl != null && user.profilePictureUrl!.isNotEmpty)
+                          ? CachedNetworkImageProvider(user.profilePictureUrl!)
                           : null,
-                      child: user.profilePictureUrl == null
+                      child: (user.profilePictureUrl == null || user.profilePictureUrl!.isEmpty)
                           ? const Icon(Icons.person, size: 50, color: Color(0xFF8F4E00))
                           : null,
                     ),
@@ -59,6 +60,27 @@ class ProfileScreen extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
+                    if (user.phone != null && user.phone!.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        user.phone!,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                    if (user.address != null && user.address!.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        user.address!,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                     const SizedBox(height: 40),
                     // Settings section
                     Container(
@@ -78,7 +100,9 @@ class ProfileScreen extends StatelessWidget {
                           _buildSettingsItem(
                             icon: Icons.person_outline,
                             title: 'Edit Profile',
-                            onTap: () {},
+                            onTap: () {
+                              context.push('/edit-profile');
+                            },
                           ),
                           const Divider(height: 1, indent: 56),
                           _buildSettingsItem(

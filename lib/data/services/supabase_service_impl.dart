@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/services/i_supabase_service.dart';
 import '../../domain/repositories/booking_repository.dart';
@@ -26,6 +27,17 @@ class SupabaseServiceImpl implements ISupabaseService {
   @override
   Future<void> upsertUserProfile(UserModel user) async {
     await client.from('users').upsert(user.toJson(), onConflict: 'id');
+  }
+
+  @override
+  Future<String> uploadProfilePicture(String userId, File imageFile) async {
+    final fileName = '$userId-${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final path = await client.storage.from('avatars').upload(
+          fileName,
+          imageFile,
+          fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+        );
+    return client.storage.from('avatars').getPublicUrl(fileName);
   }
 
   @override

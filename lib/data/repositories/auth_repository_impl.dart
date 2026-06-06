@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../../domain/repositories/auth_repository.dart';
 import '../../models/user_model.dart';
 import '../../domain/services/i_auth_service.dart';
@@ -31,6 +32,16 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signOut() async {
     await _authService.signOut();
+  }
+
+  @override
+  Future<void> updateUserProfile(UserModel updatedUser) async {
+    await _supabaseService.upsertUserProfile(updatedUser);
+  }
+
+  @override
+  Future<String> uploadAvatar(String userId, File imageFile) async {
+    return await _supabaseService.uploadProfilePicture(userId, imageFile);
   }
 
   @override

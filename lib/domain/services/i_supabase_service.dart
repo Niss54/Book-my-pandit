@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/booking_model.dart';
 import '../../models/pandit_model.dart';
@@ -6,7 +7,12 @@ import '../repositories/booking_repository.dart';
 
 abstract class ISupabaseService {
   Future<void> initialize();
+  
+  // User Management
   Future<void> upsertUserProfile(UserModel user);
+  Future<String> getUserRole(String userId);
+  Future<String> uploadProfilePicture(String userId, File imageFile);
+  
   Future<List<PanditModel>> getPandits();
   
   Future<PaymentOrder> createPaymentOrder({
@@ -45,7 +51,7 @@ abstract class ISupabaseService {
 
   Stream<List<BookingModel>> subscribeToUserBookings(String userId);
 
-  Future<String> getUserRole(String userId);
+
 
   Stream<AuthState> get authStateChanges;
   User? get currentUser;
